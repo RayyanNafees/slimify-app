@@ -77,10 +77,3 @@ export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
     </main>
   );
 }
-
-try {
-
-  import('../models/connect').then(() => console.log('Connected to MongoDB on the server'));
-} catch (e) {
-  console.error('Failed to connect mongo on server: ', e)
-}
