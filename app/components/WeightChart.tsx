@@ -1,6 +1,5 @@
 import type { WeightRecord } from 'data/weightData';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Area, AreaChart } from 'recharts';
-// import { WeightRecord } from "@/data/weightData";
 
 interface WeightChartProps {
   data: WeightRecord[];

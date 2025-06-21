@@ -1,6 +1,5 @@
 import { Card, CardContent } from "@/components/ui/card";
 import type { WeightRecord } from "data/weightData";
-// import { WeightRecord } from "@/data/weightData";
 import { ArrowDown, ArrowUp } from "lucide-react";
 
 interface WeightStatsProps {

@@ -1,5 +1,3 @@
-// import { WeightRecord } from "@/data/weightData";
-
 import type { WeightRecord } from "data/weightData";
 
 interface WeightTableProps {

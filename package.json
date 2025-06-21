@@ -9,16 +9,23 @@
     "typecheck": "react-router typegen && tsc"
   },
   "dependencies": {
+    "@google/genai": "^1.6.0",
     "@react-router/node": "^7.5.3",
     "@react-router/serve": "^7.5.3",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "isbot": "^5.1.27",
     "lucide-react": "^0.518.0",
+    "mongoose": "^8.16.0",
+    "next": "^15.3.4",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
+    "react-html5-camera-photo": "^1.5.11",
     "react-router": "^7.5.3",
+    "react-webcam": "^7.2.0",
     "recharts": "^2.15.3",
+    "remix-utils": "^8.7.0",
+    "styled-components": "^6.1.19",
     "tailwind-merge": "^3.3.1"
   },
   "devDependencies": {
