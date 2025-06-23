@@ -18,11 +18,13 @@
       // "~/*": ["./app/*"]
       "@/*": ["./app/*"]
     },
-    "esModuleInterop": true,
     "verbatimModuleSyntax": true,
     "noEmit": true,
     "resolveJsonModule": true,
     "skipLibCheck": true,
-    "strict": true
+    "strict": true,
+    // added
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true
   }
 }

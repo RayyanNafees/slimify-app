@@ -1,7 +1,7 @@
-import type { WeightRecord } from "data/weightData";
+import type { weightRec } from "@/routes/weightDashboard";
 
 interface WeightTableProps {
-  data: WeightRecord[];
+  data: weightRec[];
 }
 
 export const WeightTable = ({ data }: WeightTableProps) => {
@@ -29,6 +29,7 @@ export const WeightTable = ({ data }: WeightTableProps) => {
               )}
             </div>
           </div>
+
         );
       })}
       

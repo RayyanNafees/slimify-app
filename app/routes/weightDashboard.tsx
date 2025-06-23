@@ -2,16 +2,55 @@ import { WeightChart } from "@/components/WeightChart";
 import { WeightStats } from "@/components/WeightStats";
 import { WeightTable } from "@/components/WeightTable";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { weightData } from "data/weightData";
 import { PlusCircle } from "lucide-react";
-import { Link } from "react-router";
+import Weight from "models/weight.model";
+import { Link, useLoaderData } from "react-router";
+import type { Route } from "./+types/weightDashboard";
+import { useMemo } from "react";
+import date from "date-and-time";
 
-export const loader = async () => {
-  
+export interface weightRecord {
+  time: Date;
+  weight: number;
+  userId: string;
+}
+
+export interface weightRec {
+  date: string,
+  time: string,
+  weight: number,
+  dayOfWeek: string
+}
+
+export const loader = async ({ params }: Route.ComponentProps) => {
+  const userId = params.userId;
+  const data = await Weight.find({ userId });
+  // console.log(data)
+  return Response.json({
+    data,
+    userId,
+  });
 };
 
 const WeightDashBoard = () => {
-  const userId = 123;
+  const { userId, data } = useLoaderData();
+
+  const weightData = useMemo(() => {
+    console.log("inside updated");
+    return data.map((info: weightRecord) => {
+      const pattern1 = date.compile("ddd, MMM DD YYYY");
+      const pattern2 = date.compile("hh:mm A [GMT]Z");
+      const dd = date.format(new Date(info.time), pattern1);
+      const t = date.format(new Date(info.time), pattern2);
+      return {
+        date: dd.substring(5),
+        time: t.substring(0,8),
+        weight: info.weight,
+        dayOfWeek: dd.substring(0,3),
+      };
+    });
+  }, [data, userId]);
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-orange-50 to-amber-50">
       <div className="container mx-auto p-3 sm:p-6 space-y-4 sm:space-y-6">
@@ -51,7 +90,7 @@ const WeightDashBoard = () => {
         </div>
         {/* Floating button */}
         <Link
-          to={`/${userId}/input-weight`}
+          to={`/${userId}/weight-input`}
           className="fixed bottom-8 right-8 z-40"
         >
           <button className="bg-orange-600 text-white p-4 rounded-full shadow-lg flex items-center justify-center hover:bg-orange-700 focus:outline-none focus:ring-4 focus:ring-blue-500 focus:ring-opacity-75 transition-all duration-300 ease-in-out transform hover:scale-105 active:scale-95">

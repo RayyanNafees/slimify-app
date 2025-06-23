@@ -1,4 +1,10 @@
-import { Form, Link, redirect, useLoaderData } from "react-router";
+import {
+  Form,
+  Link,
+  redirect,
+  useActionData,
+  useLoaderData,
+} from "react-router";
 import type { Route } from "./+types/cameraUploadSection";
 import { weightPrompt } from "ai/gemini";
 import Weight from "models/weight.model";
@@ -14,8 +20,8 @@ export const loader = async ({ params }: Route.ComponentProps) => {
 export const action = async ({ request }: Route.ClientActionArgs) => {
   type Weight = { weight: number };
   if (request.method == "POST") {
-    const fd = await request.formData()
-    const userId = fd.get("userId")
+    const fd = await request.formData();
+    const userId = fd.get("userId");
     const file = fd.get("file") as File;
 
     try {
@@ -25,21 +31,27 @@ export const action = async ({ request }: Route.ClientActionArgs) => {
       // console.log(fileData)
       const resp = await weightPrompt(fileData, file.type);
 
-      if (!resp || typeof resp.text !== 'string') {
-        console.error("weightPrompt did not return a valid text response:", resp);
+      if (!resp || typeof resp.text !== "string") {
+        console.error(
+          "weightPrompt did not return a valid text response:",
+          resp
+        );
         return redirect(`/`);
       }
       const result = JSON.parse(resp.text) as Weight;
-      const weight = result.weight
+      const weight = result.weight;
+
+      if (weight == -1) {
+        return Response.json({ message: "please enter a valid photo" });
+      }
 
       const data = new Weight({
         userId,
         weight,
-        time: Date.now()
-      })
-      data.save()
-      return redirect(`/${userId}/weight-dashboard`)
-
+        time: Date.now(),
+      });
+      data.save();
+      return redirect(`/${userId}/weight-dashboard`);
     } catch (error) {
       console.error("Upload action failed:", error);
     }
@@ -49,6 +61,7 @@ export const action = async ({ request }: Route.ClientActionArgs) => {
 
 const CameraUploadSection = () => {
   const { userId } = useLoaderData();
+  const data = useActionData();
   return (
     <>
       <div className="flex items-center justify-center min-h-screen p-4">
@@ -57,6 +70,17 @@ const CameraUploadSection = () => {
             Track Your Weight
           </h1>
           <Form method="post" encType="multipart/form-data">
+            {data?.message && (
+              <div className="w-full max-w-md mx-auto mt-6 px-4">
+                <p
+                  className={
+                    "p-4 rounded-lg text-sm text-center font-semibold bg-red-100 border border-red-400 text-red-700 shadow-sm mb-5"
+                  }
+                >
+                  {data.message}
+                </p>
+              </div>
+            )}
             <input type="hidden" name="userId" id="userId" value={userId} />
             {/* Camera upload section */}
             <div id="cameraUploadForm" className="space-y-6">
