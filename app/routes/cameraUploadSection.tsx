@@ -83,22 +83,24 @@ const CameraUploadSection = () => {
             )}
             <input type="hidden" name="userId" id="userId" value={userId} />
             {/* Camera upload section */}
-            <div id="cameraUploadForm" className="space-y-6">
-              <h2 className="text-xl font-semibold text-orange-800 mb-4 flex items-center">
-                <i className="fas fa-camera text-orange-500 mr-3"></i> Upload
-                from Camera
-              </h2>
-              <p className="text-sm text-gray-600 mb-4">
-                Take a picture to log your weight effortlessly.
-              </p>
+            <Link to={`/${userId}/cam`}>
+              <div id="cameraUploadForm" className="space-y-6">
+                <h2 className="text-xl font-semibold text-orange-800 mb-4 flex items-center">
+                  <i className="fas fa-camera text-orange-500 mr-3"></i> Upload
+                  from Camera
+                </h2>
+                <p className="text-sm text-gray-600 mb-4">
+                  Take a picture to log your weight effortlessly.
+                </p>
 
-              <button
-                type="button"
-                className="w-full bg-orange-600 text-white py-3 px-4 rounded-lg hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 transition duration-150 ease-in-out text-lg font-medium shadow-md mb-4"
-              >
-                <i className="fas fa-camera-retro mr-2"></i> Open Camera
-              </button>
-            </div>
+                <button
+                  type="button"
+                  className="w-full bg-orange-600 text-white py-3 px-4 rounded-lg hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 transition duration-150 ease-in-out text-lg font-medium shadow-md mb-4"
+                >
+                  <i className="fas fa-camera-retro mr-2"></i> Open Camera
+                </button>
+              </div>
+            </Link>
 
             {/* File upload section */}
             <div id="fileUploadForm" className="space-y-6">

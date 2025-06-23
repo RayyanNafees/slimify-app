@@ -1,8 +1,8 @@
-import type { WeightRecord } from 'data/weightData';
+import type { weightRec } from '@/routes/weightDashboard';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Area, AreaChart } from 'recharts';
 
 interface WeightChartProps {
-  data: WeightRecord[];
+  data: weightRec[];
 }
 
 export const WeightChart = ({ data }: WeightChartProps) => {

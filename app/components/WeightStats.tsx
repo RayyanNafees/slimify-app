@@ -1,9 +1,9 @@
 import { Card, CardContent } from "@/components/ui/card";
-import type { WeightRecord } from "data/weightData";
+import type { weightRec } from "@/routes/weightDashboard";
 import { ArrowDown, ArrowUp } from "lucide-react";
 
 interface WeightStatsProps {
-  data: WeightRecord[];
+  data: weightRec[];
 }
 
 export const WeightStats = ({ data }: WeightStatsProps) => {

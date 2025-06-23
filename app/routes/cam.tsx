@@ -1,4 +1,3 @@
-import Camera from '@/components/camera'
 
 export const loader = () => {
 
@@ -14,7 +13,9 @@ export const loader = () => {
 }
 function Cam() {
   return (
-    <Camera />
+    <>
+      <h1>index page</h1>
+    </>
   )
 }
 

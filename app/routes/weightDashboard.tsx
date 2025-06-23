@@ -15,7 +15,7 @@ export interface weightRecord {
   userId: string;
 }
 
-export interface weightRec {
+export interface weightRec {       //user sees
   date: string,
   time: string,
   weight: number,
@@ -25,7 +25,6 @@ export interface weightRec {
 export const loader = async ({ params }: Route.ComponentProps) => {
   const userId = params.userId;
   const data = await Weight.find({ userId });
-  // console.log(data)
   return Response.json({
     data,
     userId,
@@ -36,7 +35,6 @@ const WeightDashBoard = () => {
   const { userId, data } = useLoaderData();
 
   const weightData = useMemo(() => {
-    console.log("inside updated");
     return data.map((info: weightRecord) => {
       const pattern1 = date.compile("ddd, MMM DD YYYY");
       const pattern2 = date.compile("hh:mm A [GMT]Z");
@@ -53,6 +51,7 @@ const WeightDashBoard = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-orange-50 to-amber-50">
+      
       <div className="container mx-auto p-3 sm:p-6 space-y-4 sm:space-y-6">
         <div className="text-center mb-6 sm:mb-8">
           <h1 className="text-2xl sm:text-4xl font-bold text-gray-800 mb-2">
@@ -80,11 +79,11 @@ const WeightDashBoard = () => {
           <Card className="bg-white shadow-lg border-0">
             <CardHeader className="pb-3">
               <CardTitle className="text-lg sm:text-xl font-semibold text-gray-800">
-                Recent Records
+                All Records
               </CardTitle>
             </CardHeader>
             <CardContent className="p-3 sm:p-6">
-              <WeightTable data={weightData} />
+              <WeightTable data={ weightData } userId={userId}/>
             </CardContent>
           </Card>
         </div>
