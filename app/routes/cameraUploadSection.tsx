@@ -6,7 +6,7 @@ import {
   useLoaderData,
 } from "react-router";
 import type { Route } from "./+types/cameraUploadSection";
-import { weightPrompt } from "ai/gemini";
+import { weightPrompt } from "@/lib/gemini";
 import Weight from "models/weight.model";
 
 export const loader = async ({ params }: Route.ComponentProps) => {
