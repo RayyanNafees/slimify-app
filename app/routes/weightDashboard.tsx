@@ -1,4 +1,4 @@
-import { WeightChart } from "@/components/WeightChart";
+import { ChartAreaDefault, WeightChart } from "@/components/WeightChart";
 import { WeightStats } from "@/components/WeightStats";
 import { WeightTable } from "@/components/WeightTable";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -89,7 +89,7 @@ const WeightDashBoard = () => {
             </CardHeader>
             <CardContent className="p-3 sm:p-6">
               {/* <WeightChart data={weightData} /> */}
-              <WeightChart/>
+              <ChartAreaDefault/>
             </CardContent>
           </Card>
 
