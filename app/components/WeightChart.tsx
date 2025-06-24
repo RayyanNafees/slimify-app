@@ -6,6 +6,7 @@ interface WeightChartProps {
 }
 
 export const WeightChart = ({ data }: WeightChartProps) => {
+  console.log("data inside chart",data)
   const chartData = data.map((record, index) => ({
     ...record,
     day: `Day ${index + 1}`,

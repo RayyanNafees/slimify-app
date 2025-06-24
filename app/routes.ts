@@ -4,9 +4,9 @@ export default [
   index("routes/cam.tsx"),
   route("register", "routes/register.tsx"),
   route("login", "routes/login.tsx"),
-  route(":userId/weight-dashboard", "routes/weightDashboard.tsx"),
-  route(":userId/weight-input", "routes/input.tsx"),
-  route(":userId/manual-upload", "routes/manualInputSection.tsx"),
-  route(":userId/camera-upload", "routes/cameraUploadSection.tsx"),
-  route(":userId/cam", "routes/openCam.tsx")
+  route("logout", "routes/logout.tsx"),
+  route("weight-dashboard", "routes/weightDashboard.tsx"),
+  route("weight-input", "routes/input.tsx"),
+  route("manual-upload", "routes/manualInputSection.tsx"),
+  route("camera-upload", "routes/cameraUploadSection.tsx"),
 ] satisfies RouteConfig;

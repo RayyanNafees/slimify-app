@@ -1,8 +1,57 @@
-import { Link, useLoaderData } from "react-router";
+import { Form, Link, redirect, useActionData } from "react-router";
+import type { Route } from "./+types/login";
+import User from "models/user.model";
+import bcrypt from "bcrypt";
+import { cookieStore, createToken } from "../cookies.server";
+
+interface emailUser {
+  password: string;
+  email: string;
+  id: string;
+}
+
+export const loader = async () => {
+  console.log("Connecting to MongoDB...");
+  import("mongoose").then((mongoose) =>
+    mongoose
+      .connect(process.env.MONGO_URI as string)
+      .then(() => console.log("MongoDB connected"))
+      .catch((e) => {
+        console.log("MongoDB connection error:", e);
+        throw e;
+      })
+  );
+};
+
+export const action = async ({ request }: Route.ClientActionArgs) => {
+  if (request.method == "POST") {
+    const fd = await request.formData();
+    const email = fd.get("email");
+    const password = fd.get("password");
+
+    const EmailUser: emailUser | null = await User.findOne({ email });
+
+    if (!EmailUser) {
+      return Response.json({ message: "User does not exist" });
+    }
+
+    if (typeof password == "string") {
+      const passwordMatch = bcrypt.compareSync(password, EmailUser.password);
+      if (!passwordMatch) {
+        return Response.json({ message: "Incorrect password" });
+      }
+    }
+    const token = await createToken({ id: EmailUser.id });
+    if (!token) return new Response("No token set");
+    return redirect(`/weight-dashboard`, {
+      headers: { "Set-Cookie": await cookieStore.serialize({ token }) },
+    });
+  }
+  return null;
+};
 
 const Login = () => {
-  // const {userId} = useLoaderData()
-  const userId = 123;
+  const data = useActionData();
   return (
     <div className="min-h-screen bg-red-50 text-gray-800 flex items-center justify-center p-4 font-sans antialiased">
       <main className="w-full max-w-md mx-auto">
@@ -11,12 +60,12 @@ const Login = () => {
             Welcome Back!
           </h2>
 
-          <form className="space-y-6 sm:space-y-7">
-            {/* {message && (
+          <Form method="post" className="space-y-6 sm:space-y-7" reloadDocument>
+            {data?.message && (
               <p className="bg-red-100 border border-red-400 text-red-700 p-3 sm:p-4 rounded-lg text-sm text-center font-medium">
-                {message}
+                {data?.message}
               </p>
-            )} */}
+            )}
 
             <div className="relative">
               <label
@@ -58,7 +107,7 @@ const Login = () => {
             >
               Login to Your Account
             </button>
-          </form>
+          </Form>
           <p className="text-center text-gray-600 mt-4 sm:mt-6 text-sm">
             Don&apos;t have an account?{" "}
             <Link

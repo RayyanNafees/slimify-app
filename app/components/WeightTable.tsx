@@ -1,6 +1,5 @@
 import type { weightRec } from "@/routes/weightDashboard";
 import { useState } from "react";
-import { Link } from "react-router";
 
 interface WeightTableProps {
   data: weightRec[];

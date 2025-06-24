@@ -1,7 +1,49 @@
 import React from "react";
-import { Link } from "react-router";
+import { Form, Link, redirect, useActionData } from "react-router";
+import type { Route } from "./+types/register";
+import User from "models/user.model";
+
+export const loader = async () => {
+  console.log("Connecting to MongoDB...");
+  import("mongoose").then((mongoose) =>
+    mongoose
+      .connect(process.env.MONGO_URI as string)
+      .then(() => console.log("MongoDB connected"))
+      .catch((e) => {
+        console.log("MongoDB connection error:", e);
+        throw e;
+      })
+  );
+};
+
+export const action = async ({ request }: Route.ClientActionArgs) => {
+  if (request.method == "POST") {
+    const fd = await request.formData();
+    const email = fd.get("email");
+    const password = fd.get("password");
+    const confirm = fd.get("confirm-password");
+
+    if (password != confirm) {
+      return Response.json({ message: "Passwords should match" });
+    }
+
+    if (await User.findOne({email})) {
+      return Response.json({ message: "User already exists with this account"})
+    }
+
+    const user = new User ({
+      email,
+      password
+    })
+    await user.save()
+
+    return redirect(`/login`)
+
+  }
+};
 
 const Register = () => {
+  const data = useActionData();
   return (
     <>
       <div className="min-h-screen bg-red-50 text-gray-800 flex items-center justify-center p-4 font-sans antialiased">
@@ -11,12 +53,16 @@ const Register = () => {
               Join Slimify
             </h2>
 
-            <form className="space-y-6 sm:space-y-7">
-              {/* {message && (
+            <Form
+              method="post"
+              className="space-y-6 sm:space-y-7"
+              reloadDocument
+            >
+              {data?.message && (
                 <p className="bg-red-100 border border-red-400 text-red-700 p-3 sm:p-4 rounded-lg text-sm text-center font-medium">
-                  {message}
+                  {data?.message}
                 </p>
-              )} */}
+              )}
 
               <div className="relative">
                 <label
@@ -75,10 +121,9 @@ const Register = () => {
               >
                 Register Account
               </button>
-            </form>
+            </Form>
             <p className="text-center text-gray-600 mt-3 sm:mt-6 text-sm">
               Already have an account?{" "}
-              {/* Using a standard <a> tag as Link component is not directly available in this context */}
               <Link
                 to={`/login`}
                 className="text-orange-500 hover:text-orange-600 font-semibold hover:underline"

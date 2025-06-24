@@ -2,12 +2,14 @@ import { WeightChart } from "@/components/WeightChart";
 import { WeightStats } from "@/components/WeightStats";
 import { WeightTable } from "@/components/WeightTable";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { PlusCircle } from "lucide-react";
+import { PlusCircle, Users } from "lucide-react";
 import Weight from "models/weight.model";
-import { Link, useLoaderData } from "react-router";
+import { Link, redirect, useLoaderData } from "react-router";
 import type { Route } from "./+types/weightDashboard";
 import { useMemo } from "react";
 import date from "date-and-time";
+import User from "models/user.model";
+import { getTokenFromCookie, getUserFromToken } from "@/cookies.server";
 
 export interface weightRecord {
   time: Date;
@@ -22,9 +24,18 @@ export interface weightRec {       //user sees
   dayOfWeek: string
 }
 
-export const loader = async ({ params }: Route.ComponentProps) => {
-  const userId = params.userId;
+export const loader = async ({request}: Route.ClientActionArgs) => {
+  console.log("inside dashboard")
+  const token = await getTokenFromCookie(request)
+  console.log("token gen", token)
+   if (!token) {
+    return redirect("/logout")
+  }
+  const userId = await getUserFromToken(token)
+  console.log("userId is weightDashboard", userId)
+  
   const data = await Weight.find({ userId });
+  console.log("data",data)
   return Response.json({
     data,
     userId,
@@ -40,14 +51,19 @@ const WeightDashBoard = () => {
       const pattern2 = date.compile("hh:mm A [GMT]Z");
       const dd = date.format(new Date(info.time), pattern1);
       const t = date.format(new Date(info.time), pattern2);
+      const setDate = dd.substring(5).split(' ')
+      const set = setDate[1] + "-" + setDate[0]
+      console.log("firsttry",set)
+      console.log("setDate",setDate)
       return {
-        date: dd.substring(5),
+        date: set,
         time: t.substring(0,8),
         weight: info.weight,
         dayOfWeek: dd.substring(0,3),
       };
     });
   }, [data, userId]);
+  console.log("weightData",weightData)
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-orange-50 to-amber-50">
@@ -89,7 +105,7 @@ const WeightDashBoard = () => {
         </div>
         {/* Floating button */}
         <Link
-          to={`/${userId}/weight-input`}
+          to={`/weight-input`}
           className="fixed bottom-8 right-8 z-40"
         >
           <button className="bg-orange-600 text-white p-4 rounded-full shadow-lg flex items-center justify-center hover:bg-orange-700 focus:outline-none focus:ring-4 focus:ring-blue-500 focus:ring-opacity-75 transition-all duration-300 ease-in-out transform hover:scale-105 active:scale-95">

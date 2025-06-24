@@ -1,16 +1,19 @@
-import { Link, useLoaderData } from "react-router";
+import { Link, redirect, useLoaderData } from "react-router";
 import type { Route } from "./+types/input";
+import { getTokenFromCookie, getUserFromToken } from "@/cookies.server";
+import dotenv from 'dotenv';
+dotenv.config();
 
-export const loader = async ({ params }: Route.ComponentProps) => {
-  const userId = params.userId;
-  console.log(userId);
-  return Response.json({
-    userId,
-  });
+export const loader = async ({request} : Route.ClientActionArgs) => {
+  const token = await getTokenFromCookie(request)
+  console.log("token gen", token)
+   if (!token) {
+    return redirect("/logout")
+  }
+  return null
 };
 
 const Input = () => {
-  const { userId } = useLoaderData();
   return (
     <>
       <div className="flex items-center justify-center min-h-screen p-4">
@@ -24,14 +27,14 @@ const Input = () => {
             <h2 className="text-xl font-semibold text-gray-800 mb-4 text-center">
               How would you like to log your weight?
             </h2>
-            <Link to={`/${userId}/manual-upload`}>
+            <Link to={`/manual-upload`}>
               <button className="w-full flex items-center justify-center p-5 bg-red-100 text-red-800 border border-red-300 rounded-xl shadow-md hover:bg-red-200 transition duration-150 ease-in-out text-lg font-medium mb-5">
                 <i className="fas fa-calendar-alt text-red-600 text-2xl mr-4"></i>{" "}
                 Manual Entry
               </button>
             </Link>
 
-            <Link to={`/${userId}/camera-upload`}>
+            <Link to={`/camera-upload`}>
               <button className="w-full flex items-center justify-center p-5 bg-orange-100 text-orange-800 border border-orange-300 rounded-xl shadow-md hover:bg-orange-200 transition duration-150 ease-in-out text-lg font-medium">
                 <i className="fas fa-camera text-orange-600 text-2xl mr-4"></i>{" "}
                 Upload from Camera

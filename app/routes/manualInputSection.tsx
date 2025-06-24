@@ -1,10 +1,15 @@
 import { Form, Link, redirect, useActionData, useLoaderData } from "react-router";
 import type { Route } from "./+types/manualInputSection";
 import Weight from "models/weight.model";
+import { getTokenFromCookie, getUserFromToken } from "@/cookies.server";
 
-export const loader = async ({ params }: Route.ComponentProps) => {
-  const userId = params.userId;
-  console.log(userId);
+export const loader = async ({request}: Route.ClientActionArgs) => {
+  const token = await getTokenFromCookie(request)
+    console.log("token gen", token)
+     if (!token) {
+      return redirect("/logout")
+    }
+    const userId = await getUserFromToken(token)
   return Response.json({
     userId,
   });
@@ -25,7 +30,8 @@ export const action = async ({ request }: Route.ClientActionArgs) => {
       time: weightDate
     })
     await weight.save()
-    return redirect(`/${userId}/weight-dashboard`)
+    console.log("data saved")
+    return redirect(`/weight-dashboard`)
   }
 
   return null;
@@ -33,7 +39,6 @@ export const action = async ({ request }: Route.ClientActionArgs) => {
 
 const ManualInputSection = () => {
   const { userId } = useLoaderData();
-  const data = useActionData()
   return (
     <>
       <div className="flex items-center justify-center min-h-screen p-4">
@@ -53,7 +58,7 @@ const ManualInputSection = () => {
               Select a date and enter your weight for that day.
             </p>
 
-            <Form method="post">
+            <Form method="post" reloadDocument>
               <input type="hidden" name="userId" id="userId" value={userId} />
               <div className="mb-4">
                 <label
@@ -104,7 +109,7 @@ const ManualInputSection = () => {
               </button>
             </Form>
 
-            <Link to={`/${userId}/weight-input`}>
+            <Link to={`/weight-input`}>
               <button
                 type="button"
                 className="w-full flex items-center justify-center py-2 px-4 rounded-lg text-gray-600 hover:bg-gray-100 transition duration-150 ease-in-out text-sm"
