@@ -1,8 +1,6 @@
 import { Link, redirect, useLoaderData } from "react-router";
 import type { Route } from "./+types/input";
 import { getTokenFromCookie, getUserFromToken } from "@/cookies.server";
-import dotenv from 'dotenv';
-dotenv.config();
 
 export const loader = async ({request} : Route.ClientActionArgs) => {
   const token = await getTokenFromCookie(request)

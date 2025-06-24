@@ -22,9 +22,8 @@ export const getTokenFromCookie = async (request: Request) => {
 
 export const getUserFromToken = async (token: string) => {
   console.log("till here")
-  console.log("JWT_SECRET_KEY value:", process.env.JWT_SECRET_KEY); 
-  // const id = await jwt.verify(token, process.env.JWT_SECRECT_KEY as string)
-    const id = await jwt.verify(token, 'affan-ahmad')
+  console.log("JWT_SECRET_KEY value:", process.env.JWT_SECRECT_KEY); 
+  const id = await jwt.verify(token, process.env.JWT_SECRECT_KEY as string)
   console.log("idd",id)
   return id.id
 }

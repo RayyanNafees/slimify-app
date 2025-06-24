@@ -43,7 +43,7 @@ export const action = async ({ request }: Route.ClientActionArgs) => {
           "weightPrompt did not return a valid text response:",
           resp
         );
-        return redirect(`/`);
+        return redirect(`/weight-dashboard`);
       }
       const result = JSON.parse(resp.text) as Weight;
       const weight = result.weight;
@@ -89,7 +89,7 @@ const CameraUploadSection = () => {
               <h1 className="text-2xl font-bold text-center text-gray-800 mb-6">
                 Track Your Weight
               </h1>
-              <Form method="post" encType="multipart/form-data">
+              <Form method="post" encType="multipart/form-data" reloadDocument>
                 {data?.message && (
                   <div className="w-full max-w-md mx-auto mt-6 px-4">
                     <p

@@ -88,7 +88,8 @@ const WeightDashBoard = () => {
               </CardTitle>
             </CardHeader>
             <CardContent className="p-3 sm:p-6">
-              <WeightChart data={weightData} />
+              {/* <WeightChart data={weightData} /> */}
+              <WeightChart/>
             </CardContent>
           </Card>
 
