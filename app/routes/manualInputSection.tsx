@@ -1,15 +1,22 @@
-import { Form, Link, redirect, useActionData, useLoaderData } from "react-router";
+"use client";
+import {
+  Form,
+  Link,
+  redirect,
+  useActionData,
+  useLoaderData,
+} from "react-router";
 import type { Route } from "./+types/manualInputSection";
 import Weight from "models/weight.model";
-import { getTokenFromCookie, getUserFromToken } from "@/cookies.server";
+import { getTokenFromCookie, getUserFromToken } from "@/cookies";
 
-export const loader = async ({request}: Route.ClientActionArgs) => {
-  const token = await getTokenFromCookie(request)
-    console.log("token gen", token)
-     if (!token) {
-      return redirect("/logout")
-    }
-    const userId = await getUserFromToken(token)
+export const loader = async ({ request }: Route.ClientActionArgs) => {
+  const token = await getTokenFromCookie(request);
+  console.log("token gen", token);
+  if (!token) {
+    return redirect("/logout");
+  }
+  const userId = await getUserFromToken(token);
   return Response.json({
     userId,
   });
@@ -18,8 +25,8 @@ export const loader = async ({request}: Route.ClientActionArgs) => {
 export const action = async ({ request }: Route.ClientActionArgs) => {
   if (request.method == "POST") {
     const fd = await request.formData();
-    const userId = fd.get("userId")
-    const weightDate = fd.get("weightDate")
+    const userId = fd.get("userId");
+    const weightDate = fd.get("weightDate");
     const weightInput = fd.get("weightInput");
     console.log("weight date", weightDate);
     console.log("weight input", weightInput);
@@ -27,11 +34,11 @@ export const action = async ({ request }: Route.ClientActionArgs) => {
     const weight = new Weight({
       userId: userId,
       weight: weightInput,
-      time: weightDate
-    })
-    await weight.save()
-    console.log("data saved")
-    return redirect(`/weight-dashboard`)
+      time: weightDate,
+    });
+    await weight.save();
+    console.log("data saved");
+    return redirect(`/weight-dashboard`);
   }
 
   return null;

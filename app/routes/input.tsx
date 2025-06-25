@@ -1,14 +1,14 @@
 import { Link, redirect, useLoaderData } from "react-router";
 import type { Route } from "./+types/input";
-import { getTokenFromCookie, getUserFromToken } from "@/cookies.server";
+import { getTokenFromCookie, getUserFromToken } from "@/cookies";
 
-export const loader = async ({request} : Route.ClientActionArgs) => {
-  const token = await getTokenFromCookie(request)
-  console.log("token gen", token)
-   if (!token) {
-    return redirect("/logout")
+export const loader = async ({ request }: Route.ClientActionArgs) => {
+  const token = await getTokenFromCookie(request);
+  console.log("token gen", token);
+  if (!token) {
+    return redirect("/logout");
   }
-  return null
+  return null;
 };
 
 const Input = () => {

@@ -7,7 +7,7 @@ export const cookieStore = createCookie("cookie-store", {
 });
 
 export const createToken = (data:{}, options = {}) =>
-  jwt.sign(data, 'affan-ahmad', { expiresIn: "7d", ...options });
+  jwt.sign(data, process.env.JWT_SECRECT_KEY as string, { expiresIn: "7d", ...options });
 
 export const getTokenFromCookie = async (request: Request) => {
   const cookieHeader = await request.headers.get("cookie")
@@ -16,13 +16,10 @@ export const getTokenFromCookie = async (request: Request) => {
   //   return null
   // }
   const { token } = await cookieStore.parse(cookieHeader)
-  console.log("tokenn",token)
   return token
 }
 
 export const getUserFromToken = async (token: string) => {
-  console.log("till here")
-  console.log("JWT_SECRET_KEY value:", process.env.JWT_SECRECT_KEY); 
   const id = await jwt.verify(token, process.env.JWT_SECRECT_KEY as string)
   console.log("idd",id)
   return id.id

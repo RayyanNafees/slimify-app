@@ -2,7 +2,7 @@ import { Form, Link, redirect, useActionData } from "react-router";
 import type { Route } from "./+types/login";
 import User from "models/user.model";
 import bcrypt from "bcrypt";
-import { cookieStore, createToken } from "../cookies.server";
+import { cookieStore, createToken } from "../cookies";
 
 interface emailUser {
   password: string;
@@ -10,18 +10,9 @@ interface emailUser {
   id: string;
 }
 
-export const loader = async () => {
-  console.log("Connecting to MongoDB...");
-  import("mongoose").then((mongoose) =>
-    mongoose
-      .connect(process.env.MONGO_URI as string)
-      .then(() => console.log("MongoDB connected"))
-      .catch((e) => {
-        console.log("MongoDB connection error:", e);
-        throw e;
-      })
-  );
-};
+// export const loader = async () => {
+  
+// };
 
 export const action = async ({ request }: Route.ClientActionArgs) => {
   if (request.method == "POST") {

@@ -10,15 +10,15 @@ import { weightPrompt } from "@/lib/gemini";
 import Weight from "models/weight.model";
 import { useState } from "react";
 import Camera from "@/components/camera";
-import { getTokenFromCookie, getUserFromToken } from "@/cookies.server";
+import { getTokenFromCookie, getUserFromToken } from "@/cookies";
 
-export const loader = async ({request}: Route.ClientActionArgs) => {
-  const token = await getTokenFromCookie(request)
-    console.log("token gen", token)
-     if (!token) {
-      return redirect("/logout")
-    }
-    const userId = await getUserFromToken(token)
+export const loader = async ({ request }: Route.ClientActionArgs) => {
+  const token = await getTokenFromCookie(request);
+  console.log("token gen", token);
+  if (!token) {
+    return redirect("/logout");
+  }
+  const userId = await getUserFromToken(token);
   return Response.json({
     userId,
   });
@@ -143,7 +143,9 @@ const CameraUploadSection = () => {
                     {/* <i className="fa-solid fa-file"></i> Open File */}
                   </div>
                 </div>
-                <button type="submit" className="text-red-500">submit</button>
+                <button type="submit" className="text-red-500">
+                  submit
+                </button>
               </Form>
               <Link to={`/weight-input`}>
                 <button className="w-full flex items-center justify-center py-2 px-4 rounded-lg text-gray-600 hover:bg-gray-100 transition duration-150 ease-in-out text-sm">

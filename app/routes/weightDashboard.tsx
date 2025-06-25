@@ -9,7 +9,7 @@ import type { Route } from "./+types/weightDashboard";
 import { useMemo } from "react";
 import date from "date-and-time";
 import User from "models/user.model";
-import { getTokenFromCookie, getUserFromToken } from "@/cookies.server";
+import { getTokenFromCookie, getUserFromToken } from "@/cookies";
 
 export interface weightRecord {
   time: Date;
@@ -17,25 +17,26 @@ export interface weightRecord {
   userId: string;
 }
 
-export interface weightRec {       //user sees
-  date: string,
-  time: string,
-  weight: number,
-  dayOfWeek: string
+export interface weightRec {
+  //user sees
+  date: string;
+  time: string;
+  weight: number;
+  dayOfWeek: string;
 }
 
-export const loader = async ({request}: Route.ClientActionArgs) => {
-  console.log("inside dashboard")
-  const token = await getTokenFromCookie(request)
-  console.log("token gen", token)
-   if (!token) {
-    return redirect("/logout")
+export const loader = async ({ request }: Route.ClientActionArgs) => {
+  console.log("inside dashboard");
+  const token = await getTokenFromCookie(request);
+  console.log("token gen", token);
+  if (!token) {
+    return redirect("/logout");
   }
-  const userId = await getUserFromToken(token)
-  console.log("userId is weightDashboard", userId)
-  
+  const userId = await getUserFromToken(token);
+  console.log("userId is weightDashboard", userId);
+
   const data = await Weight.find({ userId });
-  console.log("data",data)
+  console.log("data", data);
   return Response.json({
     data,
     userId,
@@ -51,23 +52,22 @@ const WeightDashBoard = () => {
       const pattern2 = date.compile("hh:mm A [GMT]Z");
       const dd = date.format(new Date(info.time), pattern1);
       const t = date.format(new Date(info.time), pattern2);
-      const setDate = dd.substring(5).split(' ')
-      const set = setDate[1] + "-" + setDate[0]
-      console.log("firsttry",set)
-      console.log("setDate",setDate)
+      const setDate = dd.substring(5).split(" ");
+      const set = setDate[1] + "-" + setDate[0];
+      console.log("firsttry", set);
+      console.log("setDate", setDate);
       return {
         date: set,
-        time: t.substring(0,8),
+        time: t.substring(0, 8),
         weight: info.weight,
-        dayOfWeek: dd.substring(0,3),
+        dayOfWeek: dd.substring(0, 3),
       };
     });
   }, [data, userId]);
-  console.log("weightData",weightData)
+  console.log("weightData", weightData);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-orange-50 to-amber-50">
-      
       <div className="container mx-auto p-3 sm:p-6 space-y-4 sm:space-y-6">
         <div className="text-center mb-6 sm:mb-8">
           <h1 className="text-2xl sm:text-4xl font-bold text-gray-800 mb-2">
@@ -89,7 +89,7 @@ const WeightDashBoard = () => {
             </CardHeader>
             <CardContent className="p-3 sm:p-6">
               {/* <WeightChart data={weightData} /> */}
-              <ChartAreaDefault/>
+              <ChartAreaDefault />
             </CardContent>
           </Card>
 
@@ -100,15 +100,12 @@ const WeightDashBoard = () => {
               </CardTitle>
             </CardHeader>
             <CardContent className="p-3 sm:p-6">
-              <WeightTable data={ weightData } userId={userId}/>
+              <WeightTable data={weightData} userId={userId} />
             </CardContent>
           </Card>
         </div>
         {/* Floating button */}
-        <Link
-          to={`/weight-input`}
-          className="fixed bottom-8 right-8 z-40"
-        >
+        <Link to={`/weight-input`} className="fixed bottom-8 right-8 z-40">
           <button className="bg-orange-600 text-white p-4 rounded-full shadow-lg flex items-center justify-center hover:bg-orange-700 focus:outline-none focus:ring-4 focus:ring-blue-500 focus:ring-opacity-75 transition-all duration-300 ease-in-out transform hover:scale-105 active:scale-95">
             <PlusCircle size={28} />
           </button>
