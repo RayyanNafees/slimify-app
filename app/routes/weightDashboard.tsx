@@ -81,7 +81,7 @@ const WeightDashBoard = async () => {
         <WeightStats data={weightData} />
 
         <div className="grid grid-cols-1 gap-4 sm:gap-6">
-          {/* <Card className="bg-white shadow-lg border-0">
+          <Card className="bg-white shadow-lg border-0">
             <CardHeader className="pb-3">
               <CardTitle className="text-lg sm:text-xl font-semibold text-gray-800">
                 Weight Progress Chart
@@ -90,7 +90,7 @@ const WeightDashBoard = async () => {
             <CardContent className="p-3 sm:p-6">
               <WeightChart data={weightData} />
             </CardContent>
-          </Card> */}
+          </Card>
 
           <Card className="bg-white shadow-lg border-0">
             <CardHeader className="pb-3">
