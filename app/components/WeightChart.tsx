@@ -1,82 +1,137 @@
-import type { weightRec } from '@/routes/weightDashboard';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Area, AreaChart } from 'recharts';
+// {
+//   type: 'line',
+//   data: {
+//     labels: ['', 'Q2', 'Q3', 'Q4'],
+//     datasets: [{
+//       label: 'Revenue',
+//       data: [100, 200, 300, 400]
+//     }]
+//   }
 
+import type { weightRec } from "@/routes/weightDashboard";
+
+// }
 interface WeightChartProps {
   data: weightRec[];
 }
-
-export const WeightChart = ({ data }: WeightChartProps) => {
-  const chartData = data.map((record, index) => ({
-    ...record,
-    day: `Day ${index + 1}`,
-    shortDate: record.date.split('-')[0],
-  }));
-
-  const CustomTooltip = ({ active, payload, label }: any) => {
-    if (active && payload && payload.length) {
-      const data = payload[0].payload;
-      return (
-        <div className="bg-white p-3 border border-gray-200 rounded-lg shadow-lg">
-          <p className="font-semibold text-gray-800 text-sm">{data.date}</p>
-          <p className="text-xs text-gray-600">{data.time}</p>
-          <p className="text-base sm:text-lg font-bold text-orange-600">{data.weight} KG</p>
-        </div>
-      );
-    }
-    return null;
+const WeightChart = async ({ data }: WeightChartProps) => {
+  const mon: Array<string> = [];
+  const we: Array<number> = [];
+  data.map((m) => {
+    mon.push(m.date + "-" + m.month);
+    we.push(m.weight);
+  });
+  const chart = {
+    type: "line",
+    data: {
+      labels: mon,
+      datasets: [
+        {
+          label: "Weights",
+          data: we,
+        },
+      ],
+    },
   };
+  const jsonChartString = JSON.stringify(chart);
 
-  return (
-    <div className="h-64 sm:h-80">
-      <ResponsiveContainer width="100%" height="100%">
-        <AreaChart data={chartData} margin={{ top: 5, right: 10, left: 5, bottom: 5 }}>
-          <defs>
-            <linearGradient id="weightGradient" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="5%" stopColor="#ea580c" stopOpacity={0.3}/>
-              <stop offset="95%" stopColor="#ea580c" stopOpacity={0.05}/>
-            </linearGradient>
-          </defs>
-          <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-          <XAxis 
-            dataKey="shortDate" 
-            tick={{ fontSize: 10, fill: '#666' }}
-            axisLine={{ stroke: '#e0e0e0' }}
-          />
-          <YAxis 
-            domain={['dataMin - 0.5', 'dataMax + 0.5']}
-            tick={{ fontSize: 10, fill: '#666' }}
-            axisLine={{ stroke: '#e0e0e0' }}
-            label={{ 
-              value: 'Weight (KG)', 
-              angle: -90, 
-              position: 'insideLeft', 
-              style: { textAnchor: 'middle', fontSize: '12px' } 
-            }}
-          />
-          <Tooltip content={<CustomTooltip />} />
-          <Area
-            type="monotone"
-            dataKey="weight"
-            stroke="#ea580c"
-            strokeWidth={2}
-            fill="url(#weightGradient)"
-            dot={{ fill: '#ea580c', strokeWidth: 2, r: 3 }}
-            activeDot={{ r: 5, stroke: '#ea580c', strokeWidth: 2, fill: '#fff' }}
-          />
-        </AreaChart>
-      </ResponsiveContainer>
-    </div>
+  const encodedChartParam = encodeURIComponent(jsonChartString);
+  const url = await fetch(
+    `https://quickchart.io/chart?chart=${encodedChartParam}&backgroundColor=white&width=500&height=300&devicePixelRatio=1.0&format=png&version=2.9.3`
   );
-}
+  console.log(url.url);
+  return (
+    <>
+      <img src={url.url} alt="data" />
+    </>
+  );
+};
 
+export default WeightChart;
 
+// import type { weightRec } from '@/routes/weightDashboard';
+// import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Area, AreaChart } from 'recharts';
 
+// interface WeightChartProps {
+//   data: weightRec[];
+// }
 
+// const WeightChart = ({ data }: WeightChartProps) => {
+//   const chartData = data.map((record, index) => ({
+//     ...record,
+//     day: `Day ${index + 1}`,
+//     shortDate: record.date.split('-')[0],
+//   }));
 
+//   const CustomTooltip = ({ active, payload, label }: any) => {
+//     if (active && payload && payload.length) {
+//       const data = payload[0].payload;
+//       return (
+//         <div className="bg-white p-3 border border-gray-200 rounded-lg shadow-lg">
+//           <p className="font-semibold text-gray-800 text-sm">{data.date}</p>
+//           <p className="text-xs text-gray-600">{data.time}</p>
+//           <p className="text-base sm:text-lg font-bold text-orange-600">{data.weight} KG</p>
+//         </div>
+//       );
+//     }
+//     return null;
+//   };
 
+//   return (
+//     <div className="h-64 sm:h-80">
+//       <ResponsiveContainer width="100%" height="100%">
+//         <AreaChart data={chartData} margin={{ top: 5, right: 10, left: 5, bottom: 5 }}>
+//           <defs>
+//             <linearGradient id="weightGradient" x1="0" y1="0" x2="0" y2="1">
+//               <stop offset="5%" stopColor="#ea580c" stopOpacity={0.3}/>
+//               <stop offset="95%" stopColor="#ea580c" stopOpacity={0.05}/>
+//             </linearGradient>
+//           </defs>
+//           <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
+//           <XAxis
+//             dataKey="shortDate"
+//             tick={{ fontSize: 10, fill: '#666' }}
+//             axisLine={{ stroke: '#e0e0e0' }}
+//           />
+//           <YAxis
+//             domain={['dataMin - 0.5', 'dataMax + 0.5']}
+//             tick={{ fontSize: 10, fill: '#666' }}
+//             axisLine={{ stroke: '#e0e0e0' }}
+//             label={{
+//               value: 'Weight (KG)',
+//               angle: -90,
+//               position: 'insideLeft',
+//               style: { textAnchor: 'middle', fontSize: '12px' }
+//             }}
+//           />
+//           <Tooltip content={<CustomTooltip />} />
+//           <Area
+//             type="monotone"
+//             dataKey="weight"
+//             stroke="#ea580c"
+//             strokeWidth={2}
+//             fill="url(#weightGradient)"
+//             dot={{ fill: '#ea580c', strokeWidth: 2, r: 3 }}
+//             activeDot={{ r: 5, stroke: '#ea580c', strokeWidth: 2, fill: '#fff' }}
+//           />
+//         </AreaChart>
+//       </ResponsiveContainer>
+//     </div>
+//   );
+// }
 
+// export default WeightChart
 
-
+// {
+//   type: 'line',
+//   data: {
+//     labels: ['', 'Q2', 'Q3', 'Q4'],
+//     datasets: [{
+//       label: 'Revenue',
+//       data: [100, 200, 300, 400]
+//     }]
+//   }
+// }
 
 // import { TrendingUp } from "lucide-react"
 // import { Area, AreaChart, CartesianGrid, XAxis } from "recharts"
@@ -94,8 +149,6 @@ export const WeightChart = ({ data }: WeightChartProps) => {
 //   ChartTooltip,
 //   ChartTooltipContent,
 // } from "@/components/ui/chart"
-
-
 
 // export const description = "A simple area chart"
 

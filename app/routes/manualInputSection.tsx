@@ -31,6 +31,8 @@ export const action = async ({ request }: Route.ClientActionArgs) => {
     console.log("weight date", weightDate);
     console.log("weight input", weightInput);
 
+    const date = await Weight.findOne()
+
     const weight = new Weight({
       userId: userId,
       weight: weightInput,

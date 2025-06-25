@@ -1,4 +1,4 @@
-import { WeightChart } from "@/components/WeightChart";
+// import { WeightChart } from "@/components/WeightChart";
 import { WeightStats } from "@/components/WeightStats";
 import { WeightTable } from "@/components/WeightTable";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -9,7 +9,8 @@ import type { Route } from "./+types/weightDashboard";
 import { useMemo } from "react";
 import date from "date-and-time";
 import User from "models/user.model";
-import { getTokenFromCookie, getUserFromToken } from "@/cookies";
+import { getTokenFromCookie, getUserFromToken, sortData } from "@/cookies";
+import WeightChart from "@/components/WeightChart";
 
 export interface weightRecord {
   time: Date;
@@ -23,6 +24,9 @@ export interface weightRec {
   time: string;
   weight: number;
   dayOfWeek: string;
+  year: string;
+  month: string;
+  dateNum: string;
 }
 
 export const loader = async ({ request }: Route.ClientActionArgs) => {
@@ -46,26 +50,31 @@ export const loader = async ({ request }: Route.ClientActionArgs) => {
 const WeightDashBoard = async () => {
   const { userId, data } = useLoaderData();
 
-  const weightData = useMemo(() => {
+  let weightData = useMemo(() => {
     return data.map((info: weightRecord) => {
       const pattern1 = date.compile("ddd, MMM DD YYYY");
       const pattern2 = date.compile("hh:mm A [GMT]Z");
       const dd = date.format(new Date(info.time), pattern1);
       const t = date.format(new Date(info.time), pattern2);
-      // const setDate = dd.substring(5).split(" ");
-      // const set = setDate[1] + "-" + setDate[0];
-      // console.log("firsttry", set);
-      // console.log("setDate", setDate);
+      const setDate = dd.substring(5).split(" ");
+      const set = setDate[1] + "-" + setDate[0]+"-"+setDate[2];
+      console.log("firsttry", set);
+      console.log("setDate", setDate);
       return {
-        date: dd.substring(5),
+        date: set,
         time: t.substring(0, 8),
         weight: info.weight,
         dayOfWeek: dd.substring(0, 3),
+        year: setDate[2],
+        month: setDate[0],
+        dateNum: setDate[1]
       };
     });
   }, [data, userId]);
-  console.log("weightData", weightData);
 
+  weightData = sortData(weightData)
+  console.log("weightData sorted", weightData)
+  
   return (
     <div className="min-h-screen bg-gradient-to-br from-orange-50 to-amber-50">
       <div className="container mx-auto p-3 sm:p-6 space-y-4 sm:space-y-6">
