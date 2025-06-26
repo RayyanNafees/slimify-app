@@ -12,6 +12,7 @@ import User from "models/user.model";
 import WeightChart from "@/components/WeightChart";
 import { getTokenFromCookie, getUserFromToken } from "../cookies.server";
 import { sortData } from "@/u";
+import Header from "@/components/Header";
 
 export interface weightRecord {
   time: Date;
@@ -83,6 +84,8 @@ const WeightDashBoard = async () => {
   console.log("weightData sorted", weightData);
 
   return (
+    <>
+    <Header />
     <div className="min-h-screen bg-gradient-to-br from-orange-50 to-amber-50">
       <div className="container mx-auto p-3 sm:p-6 space-y-4 sm:space-y-6">
         <div className="text-center mb-6 sm:mb-8">
@@ -94,31 +97,47 @@ const WeightDashBoard = async () => {
           </p>
         </div>
 
-        <WeightStats data={weightData} />
+        {weightData.length > 0 ? (
+          <WeightStats data={weightData} />
+        ) : (
+          <div className="flex flex-col gap-4 w-full">
+            <WeightStats data={weightData} />
+            <Link
+              to={`/weight-input`}
+              className="text-sm sm:text-lg text-center text-orange-600 hover:text-orange-700"
+            >
+              <button className="bg-amber-100 p-2 rounded-lg">Add Your Weight Data to Track</button>
+              
+            </Link>
+          </div>
+        )}
 
-        <div className="grid grid-cols-1 gap-4 sm:gap-6">
-          <Card className="bg-white shadow-lg border-0">
-            <CardHeader className="pb-3">
-              <CardTitle className="text-lg sm:text-xl font-semibold text-gray-800">
-                Weight Progress Chart
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="p-3 sm:p-6">
-              <WeightChart data={weightData} />
-            </CardContent>
-          </Card>
+        {weightData.length > 0 && 
+          <div className="grid grid-cols-1 gap-4 sm:gap-6">
+            <Card className="bg-white shadow-lg border-0">
+              <CardHeader className="pb-3">
+                <CardTitle className="text-lg sm:text-xl font-semibold text-gray-800">
+                  Weight Progress Chart
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="p-3 sm:p-6">
+                <WeightChart data={weightData} />
+              </CardContent>
+            </Card>
 
-          <Card className="bg-white shadow-lg border-0">
-            <CardHeader className="pb-3">
-              <CardTitle className="text-lg sm:text-xl font-semibold text-gray-800">
-                All Records
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="p-3 sm:p-6">
-              <WeightTable data={weightData} userId={userId} />
-            </CardContent>
-          </Card>
-        </div>
+            <Card className="bg-white shadow-lg border-0">
+              <CardHeader className="pb-3">
+                <CardTitle className="text-lg sm:text-xl font-semibold text-gray-800">
+                  All Records
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="p-3 sm:p-6">
+                <WeightTable data={weightData} userId={userId} />
+              </CardContent>
+            </Card>
+          </div>
+        }
+
         {/* Floating button */}
         <Link to={`/weight-input`} className="fixed bottom-8 right-8 z-40">
           <button className="bg-orange-600 text-white p-4 rounded-full shadow-lg flex items-center justify-center hover:bg-orange-700 focus:outline-none focus:ring-4 focus:ring-blue-500 focus:ring-opacity-75 transition-all duration-300 ease-in-out transform hover:scale-105 active:scale-95">
@@ -127,11 +146,13 @@ const WeightDashBoard = async () => {
         </Link>
 
         {/* Label beside button */}
-        <p className="fixed bottom-12 right-25 z-40 text-orange-400 text-sm hidden md:block">
-          add weight
-        </p>
+        {/* <p className="fixed bottom-15 right-25 z-40 text-orange-400 text-sm hidden md:block">
+          Add Weight
+        </p> */}
       </div>
     </div>
+    </>
+    
   );
 };
 

@@ -9,6 +9,7 @@ import {
 import type { Route } from "./+types/manualInputSection";
 import Weight from "models/weight.model";
 import { getTokenFromCookie, getUserFromToken } from "../cookies.server";
+import Header from "@/components/Header";
 
 export const loader = async ({ request }: Route.ClientActionArgs) => {
   const token = await getTokenFromCookie(request);
@@ -50,6 +51,7 @@ const ManualInputSection = () => {
   const { userId } = useLoaderData();
   return (
     <>
+      <Header />
       <div className="flex items-center justify-center min-h-screen p-4">
         <div className="w-full max-w-md bg-white p-6 rounded-xl shadow-lg border border-gray-200">
           <h1 className="text-2xl font-bold text-center text-gray-800 mb-6">

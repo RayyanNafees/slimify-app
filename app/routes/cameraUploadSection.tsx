@@ -11,6 +11,7 @@ import Weight from "models/weight.model";
 import { useState } from "react";
 import Camera from "@/components/camera";
 import { getTokenFromCookie, getUserFromToken } from "../cookies.server";
+import Header from "@/components/Header";
 
 export const loader = async ({ request }: Route.ClientActionArgs) => {
   const token = await getTokenFromCookie(request);
@@ -77,6 +78,7 @@ const CameraUploadSection = () => {
   }
   return (
     <>
+      <Header />
       {camera ? (
         <>
           <h1 onClick={openCamera}>go back</h1>
@@ -143,9 +145,12 @@ const CameraUploadSection = () => {
                     {/* <i className="fa-solid fa-file"></i> Open File */}
                   </div>
                 </div>
-                <button type="submit" className="text-red-500">
-                  submit
-                </button>
+                <button
+                type="submit"
+                className="w-full bg-red-600 text-white py-3 px-4 rounded-lg hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition duration-150 ease-in-out text-lg font-medium shadow-md mb-4"
+              >
+                <i className="fas fa-save mr-2"></i> Save Weight
+              </button>
               </Form>
               <Link to={`/weight-input`}>
                 <button className="w-full flex items-center justify-center py-2 px-4 rounded-lg text-gray-600 hover:bg-gray-100 transition duration-150 ease-in-out text-sm">
