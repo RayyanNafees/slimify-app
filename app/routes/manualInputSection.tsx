@@ -8,7 +8,7 @@ import {
 } from "react-router";
 import type { Route } from "./+types/manualInputSection";
 import Weight from "models/weight.model";
-import { getTokenFromCookie, getUserFromToken } from "@/cookies";
+import { getTokenFromCookie, getUserFromToken } from "../cookies.server";
 
 export const loader = async ({ request }: Route.ClientActionArgs) => {
   const token = await getTokenFromCookie(request);
@@ -31,7 +31,7 @@ export const action = async ({ request }: Route.ClientActionArgs) => {
     console.log("weight date", weightDate);
     console.log("weight input", weightInput);
 
-    const date = await Weight.findOne()
+    const date = await Weight.findOne();
 
     const weight = new Weight({
       userId: userId,

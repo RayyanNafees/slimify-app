@@ -11,6 +11,7 @@ export const WeightTable = ({ data, userId }: WeightTableProps) => {
   const recentData = show ? [...data].reverse() : [...data].reverse().slice(0, 6)
 
   function toggle() {
+    console.log("toggle from records")
     setShow((prev) => !prev)
   }
 

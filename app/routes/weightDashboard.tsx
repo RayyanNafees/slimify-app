@@ -9,8 +9,9 @@ import type { Route } from "./+types/weightDashboard";
 import { useMemo } from "react";
 import date from "date-and-time";
 import User from "models/user.model";
-import { getTokenFromCookie, getUserFromToken, sortData } from "@/cookies";
 import WeightChart from "@/components/WeightChart";
+import { getTokenFromCookie, getUserFromToken } from "../cookies.server";
+import { sortData } from "@/u";
 
 export interface weightRecord {
   time: Date;
@@ -30,21 +31,27 @@ export interface weightRec {
 }
 
 export const loader = async ({ request }: Route.ClientActionArgs) => {
-  console.log("inside dashboard");
-  const token = await getTokenFromCookie(request);
-  console.log("token gen", token);
-  if (!token) {
+  try {
+    console.log("inside dashboard");
+    const token = await getTokenFromCookie(request);
+    console.log("token gen", token);
+    if (!token) {
+      return redirect("/logout");
+    }
+    const userId = await getUserFromToken(token);
+    console.log("userId is weightDashboard", userId);
+
+    const data = await Weight.find({ userId });
+    console.log("data", data);
+    return Response.json({
+      data,
+      userId,
+    });
+  } catch (e) {
+    console.log("error in dashboard");
+    console.log("error", e);
     return redirect("/logout");
   }
-  const userId = await getUserFromToken(token);
-  console.log("userId is weightDashboard", userId);
-
-  const data = await Weight.find({ userId });
-  console.log("data", data);
-  return Response.json({
-    data,
-    userId,
-  });
 };
 
 const WeightDashBoard = async () => {
@@ -57,7 +64,7 @@ const WeightDashBoard = async () => {
       const dd = date.format(new Date(info.time), pattern1);
       const t = date.format(new Date(info.time), pattern2);
       const setDate = dd.substring(5).split(" ");
-      const set = setDate[1] + "-" + setDate[0]+"-"+setDate[2];
+      const set = setDate[1] + "-" + setDate[0] + "-" + setDate[2];
       console.log("firsttry", set);
       console.log("setDate", setDate);
       return {
@@ -67,14 +74,14 @@ const WeightDashBoard = async () => {
         dayOfWeek: dd.substring(0, 3),
         year: setDate[2],
         month: setDate[0],
-        dateNum: setDate[1]
+        dateNum: setDate[1],
       };
     });
   }, [data, userId]);
 
-  weightData = sortData(weightData)
-  console.log("weightData sorted", weightData)
-  
+  weightData = sortData(weightData);
+  console.log("weightData sorted", weightData);
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-orange-50 to-amber-50">
       <div className="container mx-auto p-3 sm:p-6 space-y-4 sm:space-y-6">

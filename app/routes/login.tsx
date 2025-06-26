@@ -1,8 +1,8 @@
 import { Form, Link, redirect, useActionData } from "react-router";
 import type { Route } from "./+types/login";
 import User from "models/user.model";
-import bcrypt from "bcrypt";
-import { cookieStore, createToken } from "../cookies";
+import { cookieStore, createToken } from "../cookies.server";
+import md5 from "md5";
 
 interface emailUser {
   password: string;
@@ -10,9 +10,22 @@ interface emailUser {
   id: string;
 }
 
-// export const loader = async () => {
-  
-// };
+// import process from 'node:process'
+import mongoose from "mongoose";
+import { useState } from "react";
+export const loader = async () => {
+  // console.log({mongoURI: process.env.MONGO_URI})
+  console.log("Connecting to MongoDB...");
+  mongoose
+    .connect(
+      "mongodb+srv://affan:AHKMAd1234@nodeexpressprojects.w84wr.mongodb.net/slimify?retryWrites=true&w=majority&appName=NodeExpressProjects"
+    )
+    .then(() => console.log("MongoDB connected"))
+    .catch((e) => {
+      console.log("MongoDB connection error:", e);
+      throw e;
+    });
+};
 
 export const action = async ({ request }: Route.ClientActionArgs) => {
   if (request.method == "POST") {
@@ -27,12 +40,17 @@ export const action = async ({ request }: Route.ClientActionArgs) => {
     }
 
     if (typeof password == "string") {
-      const passwordMatch = bcrypt.compareSync(password, EmailUser.password);
+      // const passwordMatch = await dcodeIO.bcrypt.compareSync(password, EmailUser.password);
+      const check = md5(password);
+      console.log(check);
+      const passwordMatch = check == EmailUser.password;
+      console.log("passwordMatch", passwordMatch);
       if (!passwordMatch) {
         return Response.json({ message: "Incorrect password" });
       }
     }
     const token = await createToken({ id: EmailUser.id });
+    console.log("token in Login", token);
     if (!token) return new Response("No token set");
     return redirect(`/weight-dashboard`, {
       headers: { "Set-Cookie": await cookieStore.serialize({ token }) },
@@ -42,7 +60,12 @@ export const action = async ({ request }: Route.ClientActionArgs) => {
 };
 
 const Login = () => {
+  const [count, setCount] = useState(0)
   const data = useActionData();
+  function hndlecount() {
+    console.log("inside login")
+    setCount(prev => prev + 1)
+  }
   return (
     <div className="min-h-screen bg-red-50 text-gray-800 flex items-center justify-center p-4 font-sans antialiased">
       <main className="w-full max-w-md mx-auto">
@@ -50,8 +73,9 @@ const Login = () => {
           <h2 className="text-3xl sm:text-4xl font-extrabold text-gray-800 mb-6 sm:mb-8 text-center tracking-tight">
             Welcome Back!
           </h2>
+          <button onClick={hndlecount}>{count}</button>
 
-          <Form method="post" className="space-y-6 sm:space-y-7" reloadDocument>
+          <Form method="post" className="space-y-6 sm:space-y-7">
             {data?.message && (
               <p className="bg-red-100 border border-red-400 text-red-700 p-3 sm:p-4 rounded-lg text-sm text-center font-medium">
                 {data?.message}

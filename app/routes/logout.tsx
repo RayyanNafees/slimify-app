@@ -1,6 +1,6 @@
 import { redirect } from "react-router";
 import type { Route } from "./+types/logout";
-import { cookieStore } from "../cookies";
+import { cookieStore } from "../cookies.server";
 
 export const loader = async ({ request }: Route.ClientActionArgs) => {
   await request.headers.delete("Cookie");

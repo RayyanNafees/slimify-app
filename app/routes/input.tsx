@@ -1,6 +1,7 @@
 import { Link, redirect, useLoaderData } from "react-router";
 import type { Route } from "./+types/input";
-import { getTokenFromCookie, getUserFromToken } from "@/cookies";
+import Header from "@/components/Header";
+import { getTokenFromCookie } from "../cookies.server";
 
 export const loader = async ({ request }: Route.ClientActionArgs) => {
   const token = await getTokenFromCookie(request);
@@ -14,6 +15,7 @@ export const loader = async ({ request }: Route.ClientActionArgs) => {
 const Input = () => {
   return (
     <>
+      <Header />
       <div className="flex items-center justify-center min-h-screen p-4">
         <div className="w-full max-w-md bg-white p-6 rounded-xl shadow-lg border border-gray-200">
           <h1 className="text-2xl font-bold text-center text-gray-800 mb-6">

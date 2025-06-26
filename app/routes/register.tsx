@@ -3,6 +3,19 @@ import { Form, Link, redirect, useActionData } from "react-router";
 import type { Route } from "./+types/register";
 import User from "models/user.model";
 
+// import process from 'node:process'
+import mongoose from "mongoose";
+export const loader = async () => {
+  // console.log({mongoURI: process.env.MONGO_URI})
+console.log("Connecting to MongoDB...");
+mongoose.connect('mongodb+srv://affan:AHKMAd1234@nodeexpressprojects.w84wr.mongodb.net/slimify?retryWrites=true&w=majority&appName=NodeExpressProjects')
+  .then(() => console.log('MongoDB connected'))
+  .catch((e) => {
+    console.log("MongoDB connection error:", e);
+    throw e;
+  });
+};
+
 export const action = async ({ request }: Route.ClientActionArgs) => {
   if (request.method == "POST") {
     const fd = await request.formData();

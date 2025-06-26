@@ -10,7 +10,7 @@ import { weightPrompt } from "@/lib/gemini";
 import Weight from "models/weight.model";
 import { useState } from "react";
 import Camera from "@/components/camera";
-import { getTokenFromCookie, getUserFromToken } from "@/cookies";
+import { getTokenFromCookie, getUserFromToken } from "../cookies.server";
 
 export const loader = async ({ request }: Route.ClientActionArgs) => {
   const token = await getTokenFromCookie(request);

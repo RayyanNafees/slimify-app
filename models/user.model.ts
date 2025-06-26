@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import bcrypt from "bcrypt"
+import md5 from "md5";
 
 const userSchema = new mongoose.Schema({
   email: {
@@ -12,18 +12,16 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  weight: [
-    {
-      type: mongoose.Types.ObjectId,
-      ref: "weight",
-    },
-  ],
+  weight: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "weight",
+  },
 });
 
-userSchema.pre('save', function() {
-  this.password = bcrypt.hashSync(this.password, 12)
-})
+userSchema.pre("save", async function () {
+  this.password = md5(this.password);
+});
 
-const User = mongoose.model("users", userSchema);
+const User = mongoose.model("user", userSchema);
 
 export default User;
