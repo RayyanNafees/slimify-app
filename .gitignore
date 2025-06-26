@@ -7,4 +7,7 @@
 
 
 .env
-*.lock
+
+# lock files
+bun.lock
+package-lock.json

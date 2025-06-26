@@ -2,8 +2,9 @@ import { Link, redirect, useLoaderData } from "react-router";
 import type { Route } from "./+types/input";
 import Header from "@/components/Header";
 import { getTokenFromCookie } from "../cookies.server";
+import type { LoaderFunction } from "react-router";
 
-export const loader = async ({ request }: Route.ClientActionArgs) => {
+export const loader: LoaderFunction = async ({ request }) => {
   const token = await getTokenFromCookie(request);
   console.log("token gen", token);
   if (!token) {
